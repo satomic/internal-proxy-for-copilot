@@ -22,7 +22,7 @@
     - [Configure `proxy_addons.py`](#configure-proxy_addonspy)
   - [Users: Client Side](#users-client-side)
     - [Configure Proxy in IDEs & Install Certs](#configure-proxy-in-ides--install-certs)
-- [Proxy Log Samples](#proxy-log-samples)
+- [Log Samples](#log-samples)
 
 ---
 
