@@ -22,7 +22,7 @@
     - [Configure `proxy_addons.py`](#configure-proxy_addonspy)
   - [Users: Client Side](#users-client-side)
     - [Configure Proxy in IDEs & Install Certs](#configure-proxy-in-ides--install-certs)
-
+- [Proxy Log Samples](#proxy-log-samples)
 
 ---
 
@@ -97,3 +97,30 @@ The script uses the mitmproxy library to handle HTTP requests and responses, and
 2. However, at this time, IDE will prompt certificate errors, so a [certificate needs to be installed](https://docs.mitmproxy.org/stable/concepts-certificates/ "certificate needs to be installed"). The certificate download requires access to [mitm.it](mitm.it "mitm.it"), and the prerequisite for normal access is that mitmproxy is functioning normally. Therefore, before enabling the proxy, only requests that go through the proxy will return normal web pages.
 3. Then everything is OK now, you can use GitHub Copilot as usual.🙂
 
+
+# Log Samples
+Server side log samples:
+```
+[14:49:10.294] ====================================================================================================
+[14:49:10.295] 🔵 SRC IP: 127.0.0.1, DST IP: 140.82.113.21, Request URL: https://collector.github.com/github/collect
+[14:49:10.296] ✅ Request allowed
+127.0.0.1:51801: POST https://collector.github.com/github/collect HTTP/2.0
+     << HTTP/2.0 204 No Content 0b
+[14:49:10.832][127.0.0.1:52342] client disconnect
+[14:49:10.834][127.0.0.1:52342] server disconnect www.google.com:443 (142.250.4.104:443)
+[14:49:10.837][127.0.0.1:52474] client connect
+[14:49:11.108][127.0.0.1:52474] server connect chatgpt.com:443 (172.64.155.209:443)
+[14:49:11.388] ====================================================================================================
+[14:49:11.389] 🔵 SRC IP: 127.0.0.1, DST IP: 172.64.155.209, Request URL: https://chatgpt.com/backend-api/conversation/init
+[14:49:11.390] ❌ Request blocked
+127.0.0.1:52474: POST https://chatgpt.com/backend-api/conversation/init HTTP/2.0
+     << HTTP/1.1 403 Forbidden 75b
+[14:49:13.781] ====================================================================================================
+[14:49:13.782] 🔵 SRC IP: 127.0.0.1, DST IP: 74.125.24.95, Request URL: https://optimizationguide-pa.googleapis.com/v1:GetHints?
+[14:49:13.784] ❌ Request blocked
+127.0.0.1:51803: POST https://optimizationguide-pa.googleapis.com/v1:GetHints? HTTP/2.0
+     << HTTP/1.1 403 Forbidden 75b
+```
+
+Client side web browser visit blocked page:
+![](image/blocked.png)

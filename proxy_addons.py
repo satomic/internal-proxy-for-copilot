@@ -45,10 +45,16 @@ github_public_domains = [
     "https://github.com/settings/*",
     "https://avatars.githubusercontent.com/*",
     "https://github.com/copilot/*",
+    "https://raw.githubusercontent.com/*",
+    "https://github.githubassets.com/*",
+    "https://collector.github.com/*",
+    "https://github.com/github-copilot/*",
+    "https://collector.github.com/*",
+    "https://api.github.com/*",
+    "https://github.com/notifications/*",
 ]
 
-# Microsoft Extra ID IPs
-
+# Microsoft Extra ID Domains and IPs
 msft_extra_id_domains = [
     "https://login.microsoftonline.com/*",
     "https://aadcdn.msauth.net/*",
