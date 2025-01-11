@@ -10,7 +10,7 @@
 | **Version**​ | **Update Notes**​  | **Date**​ |
 | ------------ | --------------------------------------------------------------------------------------- | --------- |
 | 1.0          | init | 20250110  |
-
+| 1.1          | Compatible with upstream mode, the situation that ip_address will be None | 20250111  |
 
 ## Table of contents
 - [Introduction](#introduction)
@@ -79,7 +79,11 @@ The script uses the mitmproxy library to handle HTTP requests and responses, and
     ```
 2. run command in console
    ```bash
-   mitmdump --listen-host 0.0.0.0 --listen-port 8080 --set block_global=false -s proxy_addons.py
+   # Option 1: regular mode https://docs.mitmproxy.org/stable/concepts-modes/#regular-proxy
+   mitmdump --listen-host 0.0.0.0 --listen-port 8080 --set block_global=false -s proxy_addons.py --mode regular
+
+   # Option 2: upstream mode https://docs.mitmproxy.org/stable/concepts-modes/#upstream-proxy
+   mitmdump --listen-host 0.0.0.0 --listen-port 8080 --set block_global=false -s proxy_addons.py --mode upstream:http://UPSTREAM_PROXY_IP:UPSTREAM_PROXY_PORT
    ```
 3. Tell the client to set the proxy in the IDE, and the IP address is `a.b.c.d` (The following diagrams and documents all use `127.0.0.1` as an example. Please replace it with your actual IP address).
 

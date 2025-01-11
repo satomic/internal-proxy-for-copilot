@@ -1,6 +1,9 @@
 # repo: https://github.com/satomic/internal-proxy-for-copilot
-# version: 1.0.0
-# mitmdump --listen-host 0.0.0.0 --listen-port 8080 --set block_global=false -s proxy_addons.py
+# version: 1.1
+# regular mode https://docs.mitmproxy.org/stable/concepts-modes/#regular-proxy
+# mitmdump --listen-host 0.0.0.0 --listen-port 8080 --set block_global=false -s proxy_addons.py --mode regular
+# upstream mode https://docs.mitmproxy.org/stable/concepts-modes/#upstream-proxy
+# mitmdump --listen-host 0.0.0.0 --listen-port 8080 --set block_global=false -s proxy_addons.py --mode upstream:http://UPSTREAM_PROXY_IP:UPSTREAM_PROXY_PORT
 
 import asyncio
 from mitmproxy import http, ctx
@@ -20,6 +23,10 @@ your_allowed_domains = [
     "https://github.com/satomic/*",
     "https://github.com/satomic?*",
     "https://github.com/enterprises/satomic/*",
+    "https://www.youtube.com/*",
+    "https://youtube.com/*",
+    "https://www.google.com/*",
+    "https://www.baidu.com/*",
 ]
 
 # GitHub Copilot official domains
@@ -135,7 +142,12 @@ class ProxyOnlyForCopilot:
         
         request_url = flow.request.url
         client_ip = flow.client_conn.address[0]
-        destination_ip = flow.server_conn.ip_address[0]
+
+        # Compatible with upstream mode, the situation that ip_address will be None
+        ip_address = flow.server_conn.ip_address
+        destination_ip = "0.0.0.0"
+        if ip_address:
+            destination_ip = flow.server_conn.ip_address[0]
 
         ctx.log.info(f"====================================================================================================")
         ctx.log.info(f"🔵 SRC IP: {client_ip}, DST IP: {destination_ip}, Request URL: {request_url}")

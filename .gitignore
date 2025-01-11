@@ -120,3 +120,5 @@ logs/
 .idea/
 
 *try*
+
+tmp/
