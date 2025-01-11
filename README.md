@@ -10,7 +10,7 @@
 | **Version**​ | **Update Notes**​  | **Date**​ |
 | ------------ | --------------------------------------------------------------------------------------- | --------- |
 | 1.0          | init | 20250110  |
-| 1.1          | Compatible with upstream mode, the situation that ip_address will be None | 20250111  |
+| 1.1          | Compatible with upstream mode, the situation that ip_address will be None, add IDE & extensions whitelist | 20250111  |
 
 ## Table of contents
 - [Introduction](#introduction)

@@ -132,6 +132,23 @@ msft_extra_id_ips = [
     "20.65.4.192/28",
 ]
 
+# IDE and extension domains
+ide_extension_domains = [
+    # VSCode
+    "*visualstudio.com*",
+    "*vscode-cdn*",
+    "*vsassets.io*",
+    "*gallerycdn.azure*",
+    "*microsoft.com*",
+    "*raw.githubusercontent.com*",
+    "*digicert.com*",
+
+    # JetBrains
+    "*jetbrains.com*",
+    "*jbstatic.com*",
+]
+
+
 class ProxyOnlyForCopilot:
     
     def __init__(self):
@@ -190,7 +207,7 @@ class ProxyOnlyForCopilot:
             return any(is_ip_in_subnet(destination_ip, subnet) for subnet in allowed_ips)
 
         if proxy_switch:
-            all_allowed_domains = your_allowed_domains + github_copilot_official_domains + github_public_domains + msft_extra_id_domains
+            all_allowed_domains = your_allowed_domains + github_copilot_official_domains + github_public_domains + msft_extra_id_domains + ide_extension_domains
             if not is_domain_allowed(request_url, all_allowed_domains) and not is_ip_allowed(destination_ip, msft_extra_id_ips):
                 ctx.log.info(f"❌ Request blocked")
                 flow.response = http.Response.make(403, forbidden_note)
