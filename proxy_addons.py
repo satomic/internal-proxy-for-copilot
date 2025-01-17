@@ -1,5 +1,5 @@
 # repo: https://github.com/satomic/internal-proxy-for-copilot
-# version: 1.1
+# version: 1.2.0
 # regular mode https://docs.mitmproxy.org/stable/concepts-modes/#regular-proxy
 # mitmdump --listen-host 0.0.0.0 --listen-port 8080 --set block_global=false -s proxy_addons.py --mode regular
 # upstream mode https://docs.mitmproxy.org/stable/concepts-modes/#upstream-proxy
@@ -16,22 +16,31 @@ from urllib.parse import urlparse
 proxy_switch = True # True False
 
 # Forbidden Note, you can change the note to your own note
-forbidden_note = b"Your request is blocked, if you have any question, please contact <SOMEONE>"
+forbidden_note = b"Your request is blocked, if you have any question, please contact YOUR_IT_ADMIN"
+
+# Allow Personal Account
+allow_personal_account = False
+enterprise_slug = "fabrikam" # 🔥🔥🔥 change this to your real enterprise/standalone id
+emu_enterpirse_sso_url = f"https://github.com/enterprises/{enterprise_slug}"
+emu_enterprise_sso_login_note = f'<h1>Please login to {emu_enterpirse_sso_url}<br>Then try to login in your IDE.</h1>'
 
 # Your allowed domains, you need to change the domain to your own domain, expecially change the `satomic` to your own organization name or enterprise name
 your_allowed_domains = [
-    "https://github.com/satomic/*",
-    "https://github.com/satomic?*",
-    "https://github.com/enterprises/satomic/*",
-    "https://www.youtube.com/*",
-    "https://youtube.com/*",
-    "https://www.google.com/*",
-    "https://www.baidu.com/*",
+    # your enterprices related
+    f"https://github.com/{enterprise_slug}/*",
+    f"https://github.com/{enterprise_slug}?*",
+    f"https://github.com/enterprises/{enterprise_slug}/*",
+    f"https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fenterprises%2F{enterprise_slug}",
+
+    # anything you like
+    # "https://www.google.com/*",
+    # "https://www.baidu.com/*",
 ]
 
 # GitHub Copilot official domains
 # https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/configuring-your-proxy-server-or-firewall-for-copilot
 github_copilot_official_domains = [
+    "https://github.com/login?*",
     "https://github.com/login/*",
     "https://api.github.com/user/*",
     "https://api.github.com/copilot_internal/*",
@@ -46,11 +55,16 @@ github_copilot_official_domains = [
 ]
 
 github_public_domains = [
+    # account
     "https://github.com/favicon.ico",
     "https://github.com/account/*",
-    "https://docs.github.com/*",
     "https://github.com/settings/*",
     "https://avatars.githubusercontent.com/*",
+
+    # docs
+    "https://docs.github.com/*",
+    
+    # others
     "https://github.com/copilot/*",
     "https://raw.githubusercontent.com/*",
     "https://github.githubassets.com/*",
@@ -59,6 +73,16 @@ github_public_domains = [
     "https://collector.github.com/*",
     "https://api.github.com/*",
     "https://github.com/notifications/*",
+    "https://github.com/session/*",
+    "https://github.com/dashboard/*",
+    "https://github.com/dashboard?*",
+
+    # logout
+    "https://github.com/logout/*",
+    "https://github.com/logout?*",
+    "https://github.com/",
+    "https://github.com/switch_account?*",
+    "https://github.com/switch_account/*",
 ]
 
 # Microsoft Extra ID Domains and IPs
@@ -66,6 +90,23 @@ msft_extra_id_domains = [
     "https://login.microsoftonline.com/*",
     "https://aadcdn.msauth.net/*",
     "https://login.live.com/*",
+]
+
+# IDE and extension domains
+ide_extension_domains = [
+    # VSCode
+    "*visualstudio.com*",
+    "*vscode-cdn*",
+    "*vsassets.io*",
+    "*gallerycdn.azure*",
+    "*microsoft.com*",
+    "*raw.githubusercontent.com*",
+    "*digicert.com*",
+    "https://vscode.dev/*",
+
+    # JetBrains
+    "*jetbrains.com*",
+    "*jbstatic.com*",
 ]
 
 # https://www.microsoft.com/en-us/download/details.aspx?id=56519 
@@ -132,21 +173,6 @@ msft_extra_id_ips = [
     "20.65.4.192/28",
 ]
 
-# IDE and extension domains
-ide_extension_domains = [
-    # VSCode
-    "*visualstudio.com*",
-    "*vscode-cdn*",
-    "*vsassets.io*",
-    "*gallerycdn.azure*",
-    "*microsoft.com*",
-    "*raw.githubusercontent.com*",
-    "*digicert.com*",
-
-    # JetBrains
-    "*jetbrains.com*",
-    "*jbstatic.com*",
-]
 
 
 class ProxyOnlyForCopilot:
@@ -212,6 +238,17 @@ class ProxyOnlyForCopilot:
                 ctx.log.info(f"❌ Request blocked")
                 flow.response = http.Response.make(403, forbidden_note)
             else:
+                # for webui copilot usage condition
+                # if request_url == "https://github.com/" or "https://github.com/copilot" in request_url:
+                #     cookies = dict(flow.request.cookies)
+                #     dotcom_user = cookies.get('dotcom_user', '')
+                #     logged_in = True if cookies.get('logged_in') == 'yes' else False
+
+                if not allow_personal_account:
+                    if "https://github.com/login?" in request_url:
+                        flow.response = http.Response.make(403, emu_enterprise_sso_login_note)
+                        ctx.log.info(f"🧭 Guide to Enterprise SSO")
+
                 ctx.log.info(f"✅ Request allowed")
 
 

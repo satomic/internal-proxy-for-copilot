@@ -11,6 +11,7 @@
 | ------------ | --------------------------------------------------------------------------------------- | --------- |
 | 1.0          | init | 20250110  |
 | 1.1          | Compatible with upstream mode, the situation that ip_address will be None, add IDE & extensions whitelist | 20250111  |
+| 1.2          | Added the option to disable personal account login | 20250117  |
 
 ## Table of contents
 - [Introduction](#introduction)
