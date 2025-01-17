@@ -40,8 +40,9 @@ your_allowed_domains = [
 # GitHub Copilot official domains
 # https://docs.github.com/en/copilot/managing-copilot/managing-github-copilot-in-your-organization/configuring-your-proxy-server-or-firewall-for-copilot
 github_copilot_official_domains = [
-    "https://github.com/login?*",
-    "https://github.com/login/*",
+    # "https://github.com/login?*",
+    # "https://github.com/login/*",
+    "https://github.com/login/oauth/*",
     "https://api.github.com/user/*",
     "https://api.github.com/copilot_internal/*",
     "https://copilot-telemetry.githubusercontent.com/telemetry/*",
