@@ -91,6 +91,7 @@ msft_extra_id_domains = [
     "https://login.microsoftonline.com/*",
     "https://aadcdn.msauth.net/*",
     "https://login.live.com/*",
+    "https://*.activedirectory.windowsazure.com/*",
 ]
 
 # IDE and extension domains
